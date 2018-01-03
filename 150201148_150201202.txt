@@ -1,0 +1,422 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include<time.h>
+// Ogulnabat HANGELDÝYEVA 150201202 
+//Sema DEMÝR 150201148
+struct YiginDugum
+{
+    int veri;
+    int veri2;
+    struct YiginDugum* sonraki;
+};
+/**Dugum alir ve gelen veriyi dugumun verisine ekler!**/
+struct YiginDugum* YeniDugum(int veri ,int veri2)
+{
+    struct YiginDugum* yigindugum = (struct YiginDugum*) malloc(sizeof(struct YiginDugum));
+    yigindugum->veri = veri;
+    yigindugum->veri2=veri2;
+    yigindugum->sonraki = NULL;
+    return yigindugum;
+}
+/**yigin**/
+struct YiginDugum*kok = NULL;
+/**yigina dugum u ekler**/
+int ekle(struct YiginDugum** kok, int veri,int veri2)
+{
+    struct YiginDugum* yigindugum = YeniDugum(veri,veri2);
+int *eklenen;
+    yigindugum->sonraki = *kok;
+    *kok = yigindugum;
+    printf("%dx%d verisine sahip dugum eklendi\n", veri,veri2);
+    eklenen[0]=veri;
+    eklenen[1]=veri2;
+    return eklenen;
+}
+int bosmu(struct YiginDugum *kok)
+{
+    return !kok;
+}
+/**yigindan en son eklenen dugum alinir**/
+int alinacak(struct YiginDugum** kok)
+{
+    if (bosmu(*kok)){
+        return -1;
+    }
+    struct YiginDugum* alinacak = *kok;
+    *kok = (*kok)->sonraki;
+    int *alinan ;
+    alinan[0]= alinacak->veri;
+     alinan[1]=alinacak->veri2;
+    printf("%dx%dverisine sahip dugum alindi\n",alinan[0],alinan[1]);
+    free(alinacak);
+    return alinan;
+}
+void yol_bul(int satir,int sutun,int labirent[satir][sutun],int girisY,int girisX,int cikisY,int cikisX,int ilk_satir,int ilk_sutun);
+
+int main()
+{
+    srand(time(NULL));
+
+    printf("\nlabirentin Y koordinati (satir) giriniz:");
+    int satir;
+    scanf("%d",&satir);
+    printf("labirentin X koorditi (sutun) giriniz:");
+    int sutun;
+    scanf("%d",&sutun);
+int matris[satir][sutun];
+    int i,j;
+    for(i=0;i<satir;i++){
+        for(j=0;j<sutun;j++){
+                matris[i][j]=rand()%2;
+                printf("%d",matris[i][j]);
+        }printf("\n");
+    }
+    int girisX,girisY,cikisX,cikisY;
+    while(1){
+    printf("labirentin giris kapisini giriniz:\n");
+     printf("Y koordinati:");
+    scanf("%d",&girisY);
+    printf("X koordinati:");
+    scanf("%d",&girisX);
+    printf("cikis kapisini giriniz:\n");
+     printf("Y koordinati:");
+    scanf("%d",&cikisY);
+     printf("X koordinati:");
+    scanf("%d",&cikisX);
+     if(girisX>=sutun||girisY>=satir){
+            printf("giris kapisi labirentin disinda\n");
+        continue;}
+    if(cikisX>=sutun||cikisY>=satir){
+            printf("cikis kapisi labirentin disinda  \n");
+        continue;
+        }
+        if(matris[cikisY][cikisX]!=1){
+            printf("cikis kapisinda duvar var \n");
+        continue;
+        }
+         if(matris[girisY][girisX]!=1){
+            printf("giris kapisinda duvar var \n");
+        continue;
+        }
+        if(((girisY==0||girisY==satir-1)&&girisX!=-1)||(girisY!=-1&&(girisX==0||girisX==sutun-1))||((cikisY==0||cikisY==satir-1)&&cikisX!=-1)||(cikisY!=-1&&(cikisX==0||cikisX==sutun-1))){
+        yol_bul(satir,sutun,matris,girisY,girisX,cikisY,cikisX,girisY,girisX);
+        printf("yigindaki bulunan yollarin indisi:\n");
+        while(matris[cikisY][cikisX]==2){
+             printf("%dx%d\n",kok->veri,kok->veri2);
+            kok=kok->sonraki;
+            if(kok->sonraki==NULL)
+                break;
+         }
+          for(i=0;i<satir;i++){
+    for(j=0;j<sutun;j++){
+        printf(" %d ",matris[i][j]);
+    }
+    printf("\n");
+ }printf("sonuc\n");
+ if(matris[cikisY][cikisX]==2){
+     printf("yol bulundu\n");
+     for(i=0;i<satir;i++){
+            for(j=0;j<sutun;j++){
+                    if(matris[i][j]==2){
+                        matris[i][j]=1;
+                        printf("%d",matris[i][j]);
+                    }
+                    else{
+                        matris[i][j]=0;
+                       printf("%d",matris[i][j]);
+                    }
+             }printf("\n");
+         }
+ }else{
+ printf("yol yok");
+ }
+
+
+        }
+        else{
+            printf("giris ve ya cikis labirent kenarinda degildir!\n");
+            continue;
+        }
+         break;
+    }
+    return 0;
+}
+void yol_bul(int satir,int sutun,int labirent[satir][sutun],int girisY,int girisX,int cikisY,int cikisX,int ilk_satir,int ilk_sutun){
+
+    printf("%dx%d =? %dx%d\n",girisY,girisX,cikisY,cikisX);
+
+if(girisY>=satir){
+    girisY=-1;
+    }
+   else if(girisX>=sutun){
+        girisX=-1;
+    }
+    if(girisY==cikisY&&girisX==cikisX){
+            labirent[girisY][girisX]=2;
+            ekle(&kok,girisY,girisX);
+        printf("yol bulundu\n");
+        return;
+    }
+        //yukari==1
+       if(labirent[girisY-1][girisX]==1){
+            labirent[girisY][girisX]=2;
+             printf("labirent[%d][%d]=%d\n",girisY,girisX,labirent[girisY][girisX]);
+             ekle(&kok,girisY,girisX);
+            printf("yukari:%dx%d\n\n",girisY-1,girisX);
+        yol_bul(satir,sutun,labirent,girisY-1,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+    }
+
+            //sag
+	else if (labirent[girisY][girisX+1]==1){
+            labirent[girisY][girisX]=2;
+             printf("labirent[%d][%d]=%d\n",girisY,girisX,labirent[girisY][girisX]);
+             ekle(&kok,girisY,girisX);
+        printf("sag:%d,%d\n\n",girisY,girisX+1);
+        yol_bul(satir,sutun,labirent,girisY,girisX+1,cikisY,cikisX,ilk_satir,ilk_sutun);
+                }
+
+
+	   //asagi
+      else if (labirent[girisY+1][girisX] == 1){
+            labirent[girisY][girisX]=2;
+             printf("labirent[%d][%d]=%d\n",girisY,girisX,labirent[girisY][girisX]);
+             ekle(&kok,girisY,girisX);
+            printf("asagi:%d,%d\n\n",girisY+1,girisX);
+		yol_bul(satir,sutun,labirent,girisY+1,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+    }
+    //sol
+   else if(labirent[girisY][girisX-1]==1){
+        labirent[girisY][girisX]=2;
+        printf("labirent[%d][%d]=%d\n",girisY,girisX,labirent[girisY][girisX]);
+        ekle(&kok,girisY,girisX);
+        printf("sol:%dx%d\n\n",girisY,girisX-1);
+       yol_bul(satir,sutun,labirent,girisY,girisX-1,cikisY,cikisX,ilk_satir,ilk_sutun);
+   }
+
+        //yukari==2/sag/asagi/sol
+   else if(labirent[girisY-1][girisX]==2&&labirent[girisY][girisX+1]<=0&&labirent[girisY+1][girisX]<=0&&labirent[girisY][girisX-1]<=0){
+            labirent[girisY][girisX]=-1;
+      printf("labirent[%d][%d]=%d\n",girisY,girisX,labirent[girisY][girisX]);
+            printf("yukari:%dx%d\n",girisY-1,girisX);
+    //yukari
+if(labirent[girisY-2][girisX]==2||labirent[girisY][girisX+2]==2||labirent[girisY+2][girisX]==2||labirent[girisY][girisX-2]==2){
+        if(labirent[girisY-2][girisX]==2&&labirent[girisY-1][girisX]==2){
+             labirent[girisY-1][girisX]=-1;
+           alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY-2,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+        if(labirent[girisY][girisX+2]==2&&labirent[girisY][girisX+1]==2){
+            labirent[girisY][girisX+1]=-1;
+            alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY,girisX+2,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+         if(labirent[girisY+2][girisX]==2&&labirent[girisY+1][girisX]==2){
+            labirent[girisY+1][girisX]=-1;
+          alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY+2,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+        if(labirent[girisY][girisX-2]==2&&labirent[girisY][girisX-1]==2){
+            labirent[girisY][girisX-1]=-1;
+            alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY,girisX-2,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+       }else{
+            alinacak(&kok);
+
+        yol_bul(satir,sutun,labirent,girisY-1,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+        printf("\n\n");
+    }
+       //yukari/sag==2/asagi/sol
+
+    else if(labirent[girisY-1][girisX]<=0&&labirent[girisY][girisX+1]==2&&labirent[girisY+1][girisX]<=0&&labirent[girisY][girisX-1]<=0){
+            labirent[girisY][girisX]=-1;
+      printf("labirent[%d][%d]=%d\n",girisY,girisX,labirent[girisY][girisX]);
+            printf("sag:%dx%d\n",girisY,girisX+1);
+            if(labirent[girisY-2][girisX]==2||labirent[girisY][girisX+2]==2||labirent[girisY+2][girisX]==2||labirent[girisY][girisX-2]==2){
+              if(labirent[girisY-2][girisX]==2&&labirent[girisY-1][girisX]==2){
+             labirent[girisY-1][girisX]=-1;
+           alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY-2,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+        if(labirent[girisY][girisX+2]==2&&labirent[girisY][girisX+1]==2){
+            labirent[girisY][girisX+1]=-1;
+            alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY,girisX+2,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+         if(labirent[girisY+2][girisX]==2&&labirent[girisY+1][girisX]==2){
+            labirent[girisY+1][girisX]=-1;
+          alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY+2,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+        if(labirent[girisY][girisX-2]==2&&labirent[girisY][girisX-1]==2){
+            labirent[girisY][girisX-1]=-1;
+            alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY,girisX-2,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+      }  else{
+             alinacak(&kok);
+        yol_bul(satir,sutun,labirent,girisY,girisX+1,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+        printf("\n\n");
+    //sag
+
+    }
+       //yukari/sag/asagi==2/sol
+
+    else if((labirent[girisY-1][girisX]<=0&&labirent[girisY][girisX+1]<=0&&labirent[girisY+1][girisX]==2&&labirent[girisY][girisX-1]<=0)){
+            labirent[girisY][girisX]=-1;
+      printf("labirent[%d][%d]=%d\n",girisY,girisX,labirent[girisY][girisX]);
+            printf("asagi:%dx%d\n",girisY+1,girisX);
+            if(labirent[girisY-2][girisX]==2||labirent[girisY][girisX+2]==2||labirent[girisY+2][girisX]==2||labirent[girisY][girisX-2]==2){
+             if(labirent[girisY-2][girisX]==2&&labirent[girisY-1][girisX]==2){
+             labirent[girisY-1][girisX]=-1;
+           alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY-2,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+        if(labirent[girisY][girisX+2]==2&&labirent[girisY][girisX+1]==2){
+            labirent[girisY][girisX+1]=-1;
+            alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY,girisX+2,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+         if(labirent[girisY+2][girisX]==2&&labirent[girisY+1][girisX]==2){
+            labirent[girisY+1][girisX]=-1;
+          alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY+2,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+        if(labirent[girisY][girisX-2]==2&&labirent[girisY][girisX-1]==2){
+            labirent[girisY][girisX-1]=-1;
+            alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY,girisX-2,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+       } else {
+            alinacak(&kok);
+        yol_bul(satir,sutun,labirent,girisY+1,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+        printf("\n\n");
+    //asagi
+        }
+       //yukari/sag/asagi/sol==2
+
+   else if(labirent[girisY-1][girisX]<=0&&labirent[girisY][girisX+1]<=0&&labirent[girisY+1][girisX]<=0&&labirent[girisY][girisX-1]==2){
+            labirent[girisY][girisX]=-1;
+      printf("labirent[%d][%d]=%d\n",girisY,girisX,labirent[girisY][girisX]);
+            printf("sol:%dx%d\n",girisY,girisX-1);
+            if(labirent[girisY-2][girisX]==2||labirent[girisY][girisX+2]==2||labirent[girisY+2][girisX]==2||labirent[girisY][girisX-2]==2){
+              if(labirent[girisY-2][girisX]==2&&labirent[girisY-1][girisX]==2){
+             labirent[girisY-1][girisX]=-1;
+           alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY-2,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+        if(labirent[girisY][girisX+2]==2&&labirent[girisY][girisX+1]==2){
+            labirent[girisY][girisX+1]=-1;
+            alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY,girisX+2,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+         if(labirent[girisY+2][girisX]==2&&labirent[girisY+1][girisX]==2){
+            labirent[girisY+1][girisX]=-1;
+          alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY+2,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+        if(labirent[girisY][girisX-2]==2&&labirent[girisY][girisX-1]==2){
+            labirent[girisY][girisX-1]=-1;
+            alinacak(&kok);
+            yol_bul(satir,sutun,labirent,girisY,girisX-2,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+   }
+       else{
+            alinacak(&kok);
+
+        yol_bul(satir,sutun,labirent,girisY,girisX-1,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+         printf("\n\n");
+    //yukari
+
+    }
+    //yukari
+   /* if(labirent[girisY][girisX]==-1&&labirent[girisY-2][girisX]==2&&labirent[girisY-1][girisX]==2){
+            labirent[girisY-1][girisX]=-1;
+        alinacak(&kok);
+
+    }
+    //sag
+  else if(labirent[girisY][girisX]==-1&&labirent[girisY][girisX+2]==2&&labirent[girisY][girisX+1]==2){
+        labirent[girisY][girisX+1]=-1;
+        alinacak(&kok);
+        }
+        //asagi
+        else if(labirent[girisY][girisX]==-1&&labirent[girisY-2][girisX]==2&&labirent[girisY-1][girisX]==2){
+        labirent[girisY-1][girisX]=-1;
+        alinacak(&kok);
+    }
+    //sol
+    else if(labirent[girisY][girisX]==-1&&labirent[girisY][girisX-2]==2&&labirent[girisY][girisX-1]==2){
+        labirent[girisY][girisX-1]=-1;
+    }*/
+    if(labirent[girisY][girisX]==-1&&(labirent[girisY-1][girisX]==2||labirent[girisY][girisX+1]==2||labirent[girisY][girisX-1]!=2||labirent[girisY+1][girisX]==2)){
+
+           if(labirent[girisY-1][girisX]==2){
+             labirent[girisY-1][girisX]=-1;
+           alinacak(&kok);
+           alinacak(&kok);
+           if(labirent[girisY][girisX-2]==2)
+            yol_bul(satir,sutun,labirent,girisY,girisX-2,cikisY,cikisX,ilk_satir,ilk_sutun);
+            if(labirent[girisY+2][girisX]==2)
+                yol_bul(satir,sutun,labirent,girisY+2,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+            if(labirent[girisY][girisX+2]==2)
+                yol_bul(satir,sutun,labirent,girisY,girisX+2,cikisY,cikisX,ilk_satir,ilk_sutun);
+            if(labirent[girisY-2][girisX]==2)
+             yol_bul(satir,sutun,labirent,girisY,girisX-2,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+        if(labirent[girisY][girisX+1]==2){
+            labirent[girisY][girisX+1]=-1;
+            alinacak(&kok);
+            alinacak(&kok);
+            if(labirent[girisY][girisX-2]==2)
+            yol_bul(satir,sutun,labirent,girisY,girisX-2,cikisY,cikisX,ilk_satir,ilk_sutun);
+            if(labirent[girisY+2][girisX]==2)
+                yol_bul(satir,sutun,labirent,girisY+2,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+            if(labirent[girisY][girisX+2]==2)
+                yol_bul(satir,sutun,labirent,girisY,girisX+2,cikisY,cikisX,ilk_satir,ilk_sutun);
+            if(labirent[girisY-2][girisX]==2)
+             yol_bul(satir,sutun,labirent,girisY,girisX-2,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+         if(labirent[girisY+1][girisX]==2){
+            labirent[girisY+1][girisX]=-1;
+          alinacak(&kok);
+          alinacak(&kok);
+            if(labirent[girisY][girisX-2]==2)
+            yol_bul(satir,sutun,labirent,girisY,girisX-2,cikisY,cikisX,ilk_satir,ilk_sutun);
+            if(labirent[girisY+2][girisX]==2)
+                yol_bul(satir,sutun,labirent,girisY+2,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+            if(labirent[girisY][girisX+2]==2)
+                yol_bul(satir,sutun,labirent,girisY,girisX+2,cikisY,cikisX,ilk_satir,ilk_sutun);
+            if(labirent[girisY-2][girisX]==2)
+             yol_bul(satir,sutun,labirent,girisY,girisX-2,cikisY,cikisX,ilk_satir,ilk_sutun);
+        }
+        if(labirent[girisY][girisX-1]==2){
+            labirent[girisY][girisX-1]=-1;
+            alinacak(&kok);
+            alinacak(&kok);
+            if(labirent[girisY][girisX-2]==2)
+            yol_bul(satir,sutun,labirent,girisY,girisX-2,cikisY,cikisX,ilk_satir,ilk_sutun);
+            if(labirent[girisY+2][girisX]==2)
+                yol_bul(satir,sutun,labirent,girisY+2,girisX,cikisY,cikisX,ilk_satir,ilk_sutun);
+            if(labirent[girisY][girisX+2]==2)
+                yol_bul(satir,sutun,labirent,girisY,girisX+2,cikisY,cikisX,ilk_satir,ilk_sutun);
+            if(labirent[girisY-2][girisX]==2)
+             yol_bul(satir,sutun,labirent,girisY,girisX-2,cikisY,cikisX,ilk_satir,ilk_sutun);
+
+        }
+    }
+    if(labirent[girisY][girisX]!=2&&labirent[girisY][girisX]==labirent[ilk_satir][ilk_sutun]){
+    printf("yol yok\n");
+    kok=NULL;
+    return;
+   }
+
+   // printf("ilk[%d][%d]: %d",ilk_satir,ilk_sutun,labirent[ilk_satir][ilk_sutun]);
+    }
+
+
+
